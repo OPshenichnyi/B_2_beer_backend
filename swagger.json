@@ -18,7 +18,7 @@
     ],
     "servers": [
         {
-            "url": "https://db-water-tracker.onrender.com"
+            "url": "https://b-2-beer-backend.vercel.app"
         }
     ],
     "tags": [
