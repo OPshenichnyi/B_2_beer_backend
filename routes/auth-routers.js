@@ -4,6 +4,28 @@ import { validateBody } from "../decorators/index.js";
 import authControler from "../controllers/auth-controler.js";
 import { authenticate } from "../middlewares/index.js";
 
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Retrieve a list of users
+ *     responses:
+ *       200:
+ *         description: A list of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   name:
+ *                     type: string
+ *                     example: John Doe
+ */
 const authRouter = express.Router();
 const userSignupValidate = validateBody(userSchemas.userSignupSchema);
 const userSigninValidate = validateBody(userSchemas.userSigninSchema);
