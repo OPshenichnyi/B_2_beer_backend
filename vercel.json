@@ -7,6 +7,13 @@
     }
   ],
   "routes": [
+        {
+      "src": "/api-docs/(.*)",
+      "headers": {
+        "cache-control": "s-maxage=1, stale-while-revalidate"
+      },
+      "dest": "/api-docs/$1"
+    },
     {
       "src": "/(.*)",
       "dest": "/server.js"
