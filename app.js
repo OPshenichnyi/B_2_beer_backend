@@ -4,13 +4,13 @@ import "dotenv/config";
 import logger from "morgan";
 import cors from "cors";
 import { readFile } from "fs/promises";
+import path from "path";
 //Path
 import authRouter from "./routes/auth-routers.js";
 import swaggerUi from "swagger-ui-express";
 //Swagger
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const swaggerPath = join(__dirname, "swagger.json");
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const swaggerPath = path.join(__dirname, "swagger.json");
 
 let swaggerSpec;
 
