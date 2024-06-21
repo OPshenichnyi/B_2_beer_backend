@@ -1,30 +1,982 @@
 {
-  "openapi": "3.0.0",
-  "info": {
-    "title": "Swagger API",
-    "version": "1.0.0",
-    "description": "API documentation"
-  },
-  "paths": {
-    "/api/users": {
-      "get": {
-        "summary": "Retrieve a list of users",
-        "responses": {
-          "200": {
-            "description": "A list of users.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object"
-                  }
-                }
-              }
-            }
-          }
+    "openapi": "3.0.1",
+    "info": {
+        "version": "1.1.1",
+        "title": "Water tracker",
+        "description": "API documentation for project Water tracker.",
+        "license": {
+            "name": "",
+            "url": ""
         }
-      }
+    },
+    "consumes": [
+        "application/json",
+        "multipart/form-data"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "servers": [
+        {
+            "url": "https://b-2-beer-backend.vercel.app/"
+        }
+    ],
+    "tags": [
+
+        {
+            "name": "User",
+            "description": "User profile  and Authorization endpoints"
+        },
+        {
+            "name": "Water",
+            "description": "Water endpoint for adding, editing and deleting information about water input "
+        },
+        {
+            "name": "DataUser",
+            "description": "Endpoint for getting list of water consume and percentage of daily norma for today "
+        }
+    ],
+    "paths": {
+        "/api/users/register": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Sign up new user - User registration",
+                "parameters": [],
+                "requestBody": {
+                    "description": "Signup's object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AuthRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "New User Registered",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserInfoWithTokenSingupResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {}
+                    },
+                    "409": {
+                        "description": "Email already exist",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/users/login": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Sign in existing user",
+                "parameters": [],
+                "requestBody": {
+                    "description": "Signin's object",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AuthRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sign in existing user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserInfoWithTokenSinginResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Email or password is wrong",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/users/logout": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "User log out",
+                "parameters": [],
+                "security": [
+                    {
+                       "Bearer": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "User log out",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Not authorized",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/users/avatars": {
+            "patch": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Change user's avatar",
+                "parameters": [],
+                "requestBody": {
+                    "description": "Upload file new user's avatar",
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserChangeAvatarRequest"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Avatar's URL",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserChangeAvatarResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "File not found, File extention not allow",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Not authorized",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/users/current": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get current user info",
+                "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": " Logged user returned",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserInfoResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Not authorized",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/users/": {
+            "patch": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update user profile",
+                "parameters": [],
+                "requestBody": {
+                    "description": "Update user",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserChangeInfoRequest"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Update user returned",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserChangeInfoResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Old password is incorrect",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/users/water-rate/": {
+            "patch": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Change user's water rate",
+                "parameters": [],
+                "requestBody": {
+                    "description": "New water rate",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/WaterRateRequest"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "New water rate value",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/WaterRateResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Email not found",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/water/": {
+            "post": {
+                "tags": [
+                    "Water"
+                ],
+                "summary": "Add info about water input",
+                "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Add new input of water",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InputRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Input Successfully added",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InputResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Not authorized",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/water/{waterId}": {
+            "delete": {
+                "tags": [
+                    "Water"
+                ],
+                "summary": "Delete info about water input",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "waterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Dynamic parameter ID of water input records."
+                    }
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Delete success",
+                        "content": {}
+                    },
+                    "404": {
+                        "description": "Provided ID is not valid",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Not authorized",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/water/{waterId}/water-volume": {
+            "patch": {
+                "tags": [
+                    "Water"
+                ],
+                "summary": "Update info about water input",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "waterId",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Dynamic parameter ID of water input records."
+                    }
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {
+                    "description": "Update waterVolume",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/InputRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Input Successfully changed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/InputResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": " ${waterId} is not valid id",
+                        "content": {}
+                    },
+                    "401": {
+                        "description": "Not authorized",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/today/": {
+            "get": {
+                "tags": [
+                    "DataUser"
+                ],
+                "summary": "Get list of water consume and percentage of daily norma of User for today",
+                "parameters": [],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+                "requestBody": {},
+                "responses": {
+                    "200": {
+                        "description": "Successfull operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetStatisticsForToday"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "User not found",
+                        "content": {}
+                    }
+                }
+            }
+        },
+        "/api/month/{date} ": {
+            "get": {
+                "tags": [
+                    "DataUser"
+                ],
+                "summary": "Get list of water consume and percentage of daily norma of User for today",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "date",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
+                        },
+                        "description": "Enter the date in the format 2024-01"
+                
+                    }
+                ],
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ],
+
+                "responses": {
+                    "200": {
+                        "description": "Successfull operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetStatisticsForMonth"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Email not found",
+                        "content": {}
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AuthRequest": {
+                "type": "object",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "format": "email",
+                        "example": "User@gmail.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "User's password",
+                        "example": "qazWsx12"
+                    }
+                }
+            },
+            "AuthResetPasswordRequest": {
+                "type": "object",
+                "required": [
+                    "email"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "format": "email"
+                    }
+                }
+            },
+            "UserChangeAvatarRequest": {
+                "type": "object",
+                "required": [
+                    "avatarURL"
+                ],
+                "properties": {
+                    "avatarURL": {
+                        "type": "string",
+                        "description": "File of avatarURL",
+                        "format": "binary"
+                    }
+                }
+            },
+            "UserChangeInfoRequest": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "example": "User@gmail.com"
+                    },
+                    "userName": {
+                        "type": "string",
+                        "description": "User's name",
+                        "example": "Nik"
+                    },
+                    "gender": {
+                        "type": "string",
+                        "description": "User's gender",
+                        "example": "man",
+                        "enum": [
+                            "man",
+                            "girl"
+                        ]
+                    },
+                    "oldPassword": {
+                        "type": "string",
+                        "description": "Old user's password",
+                        "example": "qazWsx12"
+                    },
+                    "newPassword": {
+                        "type": "string",
+                        "description": "New user's password",
+                        "example": "qazWsx123"
+                    }
+                }
+            },
+            "WaterRateRequest": {
+                "type": "object",
+                "required": [
+                    "waterRate"
+                ],
+                "properties": {
+                    "waterRate": {
+                        "type": "integer",
+                        "description": "User's water rate",
+                        "example": 1900
+                    }
+                }
+            },
+            "UserInfoDefaultResponse": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "format": "email",
+                        "example": "User@gmail.com"
+                    },
+                    "userName": {
+                        "type": "string",
+                        "description": "User's name",
+                        "example": ""
+                    },
+                    "avatarURL": {
+                        "type": "string",
+                        "description": "User's avatar",
+                        "example": ""
+                    },
+                    "gender": {
+                        "type": "string",
+                        "description": "User's gender",
+                        "example": "man",
+                        "enum": [
+                            "man",
+                            "girl"
+                        ]
+                    },
+                    "waterRate": {
+                        "type": "integer",
+                        "description": "User's daily water rate",
+                        "example": "2000"
+                    }
+                }
+            },
+            "UserInfoResponse": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "example": "User@gmail.com"
+                    },
+                    "userName": {
+                        "type": "string",
+                        "description": "User's name",
+                        "example": "Nik"
+                    },
+                    "avatarURL": {
+                        "type": "string",
+                        "description": "User's avatar",
+                        "example": "https://res.cloudinary.com/djkfbggvo/image/upload/v1703404979/u5icpavsmtvlq64fiyxv.jpg"
+                    },
+                    "gender": {
+                        "type": "string",
+                        "description": "User's gender",
+                        "example": "man",
+                        "enum": [
+                            "man",
+                            "girl"
+                        ]
+                    },
+                    "waterRate": {
+                        "type": "integer",
+                        "description": "User's daily water rate",
+                        "example": "2500"
+                    }
+                }
+            },
+            "UserInfoWithTokenSingupResponse": {
+                "type": "object",
+                "properties": {
+                    "user": {
+                        "$ref": "#/components/schemas/UserInfoDefaultResponse"
+                    }
+                }
+            },
+            "UserInfoWithTokenSinginResponse": {
+                "type": "object",
+                "properties": {
+
+                    "user": {
+                        "$ref": "#/components/schemas/UserInfoResponse"
+                        
+                    },
+                    "token": {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ODY5YzQ3YmRkMTVhMTg0ZTU0NjQxZSIsImlhdCI6MTcwMzMyMDY0OSwiZXhwIjoxNzAzNDA3MDQ5fQ.oJnhuBn0QoriX-ZUNJSHBdNHTvsQso7IQyAnAzjaV04"
+                    }
+                }
+            },
+            "AuthResetPasswordResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "description": "Success message",
+                        "example": "A new password has been sent to your email"
+                    }
+                }
+            },
+            "UserChangeAvatarResponse": {
+                "type": "object",
+                "properties": {
+                    "avatarURL": {
+                        "type": "string",
+                        "description": "Avatar's URL",
+                        "example": "https://res.cloudinary.com/djkfbggvo/image/upload/v1703404979/u5icpavsmtvlq64fiyxv.jpg"
+                    }
+                }
+            },
+            "UserChangeInfoResponse": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "User's email",
+                        "example": "User@gmail.com"
+                    },
+                    "userName": {
+                        "type": "string",
+                        "description": "User's name",
+                        "example": "Nik"
+                    },
+                    "gender": {
+                        "type": "string",
+                        "description": "User's gender",
+                        "example": "man",
+                        "enum": [
+                            "man",
+                            "girl"
+                        ]
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "description": "created at",
+                        "example": "2024-01-09T14:21:47.211Z"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "description": "created at",
+                        "example": "2024-01-09T17:37:21.124Z"
+                    }
+                }
+            },
+            "WaterRateResponse": {
+                "type": "object",
+                "properties": {
+                    "waterRate": {
+                        "type": "integer",
+                        "description": "User's water rate",
+                        "example": 1900
+
+                    }
+                }
+            },
+            "GetTotalDataByCurrentDayResponse": {
+                "type": "object",
+                "properties": {
+                    "waterInputsForToday": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "_id": {
+                                    "type": "string",
+                                    "description": "ID of water input records"
+                                },
+                                "waterVolume": {
+                                    "type": "integer",
+                                    "description": "The portion of water consumed in a single entry."
+                                },
+                                "date": {
+                                    "type": "string",
+                                    "description": "Time of water input"
+                                },
+                                "owner": {
+                                    "type": "string",
+                                    "description": "User's id"
+                                }
+                            }
+                        }
+                    },
+                    "dailyNormFulfillment": {
+                        "type": "integer",
+                        "description": "Total daily water consumption fulfillment."
+                    }
+                },
+                "example": {
+                    "waterInputsForToday": [
+                        {
+                            "_id": "6550bd6da31c7d1b6d55241a",
+                            "waterVolume": 1,
+                            "date": "2023-11-12T10:03:24.626Z",
+                            "owner": "654f6747c4faaae3bc1857f1"
+                        },
+                        {
+                            "_id": "6550bd80a31c7d1b6d55241d",
+                            "waterVolume": 2,
+                            "date": "2023-11-12T13:05:24.626Z",
+                            "owner": "654f6747c4faaae3bc1857f1"
+                        }
+                    ],
+                    "dailyNormFulfillment": 50
+                }
+            },
+            "InputRequest": {
+                "type": "object",
+                "required": [
+                    "waterVolume",
+                    "date"
+                ],
+                "properties": {
+                    "waterVolume": {
+                        "type": "integer",
+                        "description": "quantity of drunk water"
+                    },
+                    "date": {
+                        "type": "string",
+                        "description": "time of water input"
+                    }
+                },
+                "example": {
+                    "waterVolume": 200,
+                    "date": "2023-11-14T17:06:57.705Z"
+                }
+            },
+
+            "InputResponse": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "description": "ID of water input records"
+                    },
+                    "waterVolume": {
+                        "type": "integer",
+                        "description": "The portion of water consumed in a single entry."
+                    },
+                    "date": {
+                        "type": "string",
+                        "description": "time of water input"
+                    },
+                    "owner": {
+                        "type": "string",
+                        "description": "User'd ID"
+                    }
+
+                },
+                "example": {
+
+                    "_id": "65886da5d4ab9261e648e775",  
+                    "waterVolume": 300,                  
+                    "date": "2023-12-23T17:33:57.705Z",
+                    "owner": "658863b96dececba531c5fb1"
+
+                }
+            },
+            "GetStatisticsForToday": {
+                "type": "object",
+                "properties": {                    
+                "percentage": {
+                    "type": "integer",
+                    "description": "Percentage of daily water rate fulfillment."
+                },
+                "dailyTotal": {
+                    "type": "integer",
+                    "description": "Drank water per day."
+                },
+                "waterRate": {
+                    "type": "integer",
+                    "description": "Required amount of water per day."
+                },
+                    "waterRecords": {
+                        "type": "array",
+                        "description": "All inputs of the water per current day",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "waterVolume": {
+                                    "type": "integer",
+                                    "description": "The portion of water consumed in a single entry."
+                                },
+                                "date": {
+                                    "type": "string",
+                                    "description": "Time of water input."
+                                },
+                                "owner": {
+                                    "type": "string",
+                                    "description": "User's ID."
+                                },
+                                "_id": {
+                                    "type": "string",
+                                    "description": "ID of water input records."
+                                }
+                            }
+                        }
+                    }
+
+                },
+                "example": {
+                    "percentage": 60,
+                    "dailyTotal":1200,
+                    "waterRate":2000,
+                    "waterRecords": [
+                        {
+                            "_id": "65880146dda4349579270cef",
+                            "waterVolume": 200,
+                            "date": "2023-12-24T11:33:57.705Z",
+                            "owner": "6587e58dcb3dfb3a121e30f4",
+                            "createdAt":"2023-12-24T10:00:38.880Z",
+                            "updatedAt":"2023-12-24T10:00:38.880Z"
+                        }
+                    ]
+                    
+                }
+            },
+            "GetStatisticsForMonth": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "date": {
+                            "type": "string",
+                            "description": "Time and month of water input"
+                        },
+                        "waterRate": {
+                            "type": "integer",
+                            "description": "User's water rate"
+                        },
+                        "dailyNormFulfillment": {
+                            "type": "integer",
+                            "description": "Percentage of daily water rate fulfillment."
+                        },
+                        "servingOfWater": {
+                            "type": "integer",
+                            "description": "Quantity of inputs per day"
+                        }
+                    }
+                },
+                "example": [
+                    {
+                        "date": "2023-12-23",
+                        "dailyNormFulfillment": 30,
+                        "WaterRate": 2,
+                        "servingOfWater": 1
+                    },
+                    {
+                        "date": "2023-12-24",
+                        "dailyNormFulfillment": 90,
+                        "WaterRate": 2,
+                        "servingOfWater": 3
+                    }
+                ]
+            }
+        },
+        "securitySchemes": {
+            "Bearer": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
     }
-  }
 }
