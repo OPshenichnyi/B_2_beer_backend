@@ -18,14 +18,11 @@ async function loadSwagger() {
   try {
     const swaggerDocument = JSON.parse(await readFile("./swagger.json"));
     swaggerSpec = swaggerDocument;
-    console.log(swaggerSpec);
   } catch (error) {
     console.error("Error reading swagger.json:", error);
     process.exit(1); // Завершуємо процес з помилкою
   }
 }
-
-await loadSwagger();
 
 const app = express();
 
@@ -33,7 +30,12 @@ const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
-app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(
+  "/api/docs",
+  loadSwagger,
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec)
+);
 app.use("/api/users", authRouter);
 
 app.use((req, res) => {
