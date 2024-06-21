@@ -18,7 +18,7 @@
     ],
     "servers": [
         {
-            "url": "https://b-2-beer-backend.vercel.app/"
+            "url": "https://b-2-beer-backend.vercel.app"
         }
     ],
     "tags": [
