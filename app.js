@@ -14,6 +14,15 @@ const swaggerPath = path.join(__dirname, "swagger.json");
 
 let swaggerSpec;
 
+async function loadSwagger() {
+  try {
+    const data = await readFile(swaggerPath, "utf8");
+    swaggerSpec = JSON.parse(data);
+  } catch (error) {
+    console.error("Error reading swagger.json:", error);
+    process.exit(1); // Завершуємо процес з помилкою
+  }
+}
 try {
   const data = await readFile(swaggerPath, "utf8");
   swaggerSpec = JSON.parse(data);
@@ -21,6 +30,7 @@ try {
   console.error("Error reading swagger.json:", error);
   process.exit(1); // Завершуємо процес з помилкою
 }
+await loadSwagger();
 
 const app = express();
 
