@@ -8,7 +8,11 @@ import { readFile } from "fs/promises";
 import authRouter from "./routes/auth-routers.js";
 import swaggerUi from "swagger-ui-express";
 //Swagger
-const swaggerSpec = JSON.parse(await readFile("./swagger.json"));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const swaggerPath = join(__dirname, "swagger.json");
+
+const swaggerSpec = JSON.parse(await readFile(swaggerPath, "utf8"));
 
 const app = express();
 
