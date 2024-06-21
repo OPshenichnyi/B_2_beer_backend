@@ -9,7 +9,7 @@ const options = {
       description: "Your API description",
     },
   },
-  apis: ["./routes/*.js"], // вкажіть шлях до ваших файлів з endpoint'ами
+  apis: ["./*.js"], // вкажіть шлях до ваших файлів з endpoint'ами
 };
 
 const swaggerSpec = swaggerJSDoc(options);
