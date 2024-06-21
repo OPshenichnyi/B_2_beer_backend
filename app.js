@@ -15,7 +15,6 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 app.use("/users", authRouter);
-app.use("/api-docs", express.static("node_modules/swagger-ui-dist"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use((req, res) => {
