@@ -5,13 +5,12 @@ import logger from "morgan";
 import cors from "cors";
 import { readFile } from "fs/promises";
 import path from "path";
+import swaggerUi from "swagger-ui-express";
+
 //Path
 import authRouter from "./routes/auth-routers.js";
-import swaggerUi from "swagger-ui-express";
-//Swagger
-// const __dirname = path.dirname(new URL(import.meta.url).pathname);
-// const swaggerPath = path.join(__dirname, "swagger.json");
 
+//Swagger
 let swaggerSpec;
 
 async function loadSwagger() {
@@ -24,18 +23,15 @@ async function loadSwagger() {
   }
 }
 
+await loadSwagger(); // Завантажуємо swaggerSpec перед налаштуванням маршруту
+
 const app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
-app.use(
-  "/api/docs",
-  loadSwagger,
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerSpec)
-);
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/users", authRouter);
 
 app.use((req, res) => {
@@ -45,4 +41,5 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ message: err.message });
 });
+
 export default app;
