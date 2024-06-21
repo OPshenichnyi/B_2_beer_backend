@@ -1,21 +1,25 @@
-//Libary
 import express from "express";
 import "dotenv/config";
 import logger from "morgan";
 import cors from "cors";
 import { readFile } from "fs/promises";
+import { fileURLToPath } from "url";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
 
 //Path
 import authRouter from "./routes/auth-routers.js";
 
-//Swagger
+// Swagger
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const swaggerPath = path.join(__dirname, "swagger.json");
+
 let swaggerSpec;
 
 async function loadSwagger() {
   try {
-    const swaggerDocument = JSON.parse(await readFile("./swagger.json"));
+    const swaggerDocument = JSON.parse(await readFile(swaggerPath, "utf8"));
     swaggerSpec = swaggerDocument;
   } catch (error) {
     console.error("Error reading swagger.json:", error);
