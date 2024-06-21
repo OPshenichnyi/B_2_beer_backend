@@ -9,7 +9,12 @@ import swaggerUi from "swagger-ui-express";
 
 //Path
 import authRouter from "./routes/auth-routers.js";
+const CSS_URL =
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
 
+const options = {
+  customCssUrl: CSS_URL,
+};
 // Swagger
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,7 +40,7 @@ const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
-app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, options));
 app.use("/api/users", authRouter);
 
 app.use((req, res) => {
