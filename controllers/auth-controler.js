@@ -111,6 +111,11 @@ const signout = async (req, res) => {
   res.status(204).json();
 };
 
+const test = async (req, res) => {
+  res.json({
+    message: "Test",
+  });
+};
 export default {
   signup: ctrlWrapper(signup),
   verifyEmail: ctrlWrapper(verifyEmail),
@@ -118,4 +123,5 @@ export default {
   signin: ctrlWrapper(signin),
   getCurrent: ctrlWrapper(getCurrent),
   signout: ctrlWrapper(signout),
+  test: ctrlWrapper(test),
 };

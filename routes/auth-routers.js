@@ -15,6 +15,7 @@ authRouter.post("/verify", userRefreshValidate, authControler.resendVerify);
 authRouter.post("/login", userSigninValidate, authControler.signin);
 authRouter.get("/current", authenticate, authControler.getCurrent);
 authRouter.post("/logout", authenticate, authControler.signout);
+authRouter.post("/test", authControler.test);
 
 export default authRouter;
 
