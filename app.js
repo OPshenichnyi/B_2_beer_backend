@@ -7,6 +7,7 @@ import { readFile } from "fs/promises";
 //Path
 import authRouter from "./routes/auth-routers.js";
 import swaggerUi from "swagger-ui-express";
+//Swagger
 const swaggerSpec = JSON.parse(await readFile("./swagger.json"));
 
 const app = express();
