@@ -12,7 +12,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const swaggerPath = join(__dirname, "swagger.json");
 
-const swaggerSpec = JSON.parse(await readFile(swaggerPath, "utf8"));
+let swaggerSpec;
+
+try {
+  const data = await readFile(swaggerPath, "utf8");
+  swaggerSpec = JSON.parse(data);
+} catch (error) {
+  console.error("Error reading swagger.json:", error);
+  process.exit(1); // Завершуємо процес з помилкою
+}
 
 const app = express();
 
