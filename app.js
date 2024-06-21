@@ -11,29 +11,29 @@ import swaggerUi from "swagger-ui-express";
 //Swagger
 // const __dirname = path.dirname(new URL(import.meta.url).pathname);
 // const swaggerPath = path.join(__dirname, "swagger.json");
-const swaggerDocument = JSON.parse(await readFile("./swagger.json"));
-// let swaggerSpec;
 
-// async function loadSwagger() {
-//   try {
-//     const data = await readFile(swaggerPath, "utf8");
-//     swaggerSpec = JSON.parse(data);
-//   } catch (error) {
-//     console.error("Error reading swagger.json:", error);
-//     process.exit(1); // Завершуємо процес з помилкою
-//   }
-// }
+let swaggerSpec;
 
-// await loadSwagger();
+async function loadSwagger() {
+  try {
+    const swaggerDocument = JSON.parse(await readFile("./swagger.json"));
+    swaggerSpec = swaggerDocument;
+    console.log(swaggerSpec);
+  } catch (error) {
+    console.error("Error reading swagger.json:", error);
+    process.exit(1); // Завершуємо процес з помилкою
+  }
+}
 
-console.log(swaggerDocument);
+await loadSwagger();
+
 const app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
-app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/users", authRouter);
 
 app.use((req, res) => {
