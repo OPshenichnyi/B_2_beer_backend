@@ -19,12 +19,12 @@ const swaggerPath = path.join(__dirname, "swagger.json");
 const swaggerDocument = JSON.parse(await readFile(swaggerPath, "utf8"));
 
 const options = {
-  swaggerDefinition: swaggerDocument,
+  // swaggerDefinition: swaggerDocument,
   apis: [],
   explorer: true,
 };
 
-const swaggerSpec = swaggerJSDoc(options);
+// const swaggerSpec = swaggerJSDoc(options);
 
 const app = express();
 
@@ -32,7 +32,7 @@ const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 app.use(express.static("public"));
 app.use("/api/users", authRouter);
 
