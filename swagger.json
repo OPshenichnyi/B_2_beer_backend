@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://virtserver.swaggerhub.com/ALEXANDERPSHENICHNYI/Test/1.0.0",
+      "url": "https://b-2-beer-backend.vercel.app/",
       "description": "SwaggerHub API Auto Mocking"
     }
   ],
