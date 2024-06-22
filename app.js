@@ -18,8 +18,11 @@ const __dirname = path.dirname(__filename);
 const swaggerPath = path.join(__dirname, "swagger.json");
 const swaggerDocument = JSON.parse(await readFile(swaggerPath, "utf8"));
 
-const CSS_URL =
-  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
+const CSS_URL = [
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css",
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.min.css",
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.css",
+];
 
 const options = {
   swaggerDefinition: swaggerDocument,
