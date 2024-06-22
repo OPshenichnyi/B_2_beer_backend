@@ -36,6 +36,7 @@
     "nanoid": "^5.0.4",
     "nodemailer": "^6.9.7",
     "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-dist": "^5.17.14",
     "swagger-ui-express": "^5.0.1"
   }
 }
