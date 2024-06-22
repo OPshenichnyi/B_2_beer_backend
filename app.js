@@ -7,12 +7,11 @@ import { fileURLToPath } from "url";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
-import { SwaggerUIBundle, SwaggerUIStandalonePreset } from "swagger-ui-dist";
 
 //Path
 import authRouter from "./routes/auth-routers.js";
 
-// Swagger
+// Path to swagger.json
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const swaggerPath = path.join(__dirname, "swagger.json");
@@ -22,6 +21,8 @@ const options = {
   swaggerDefinition: swaggerDocument,
   apis: [],
 };
+const CSS_URL =
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
 
 const swaggerSpec = swaggerJSDoc(options);
 
@@ -31,7 +32,11 @@ const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
-app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(
+  "/api/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, { customCssUrl: CSS_URL })
+);
 app.use("/api/users", authRouter);
 
 app.use((req, res) => {
