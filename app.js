@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
+import { SwaggerUIBundle, SwaggerUIStandalonePreset } from "swagger-ui-dist";
 
 //Path
 import authRouter from "./routes/auth-routers.js";
@@ -17,26 +18,12 @@ const __dirname = path.dirname(__filename);
 const swaggerPath = path.join(__dirname, "swagger.json");
 const swaggerDocument = JSON.parse(await readFile(swaggerPath, "utf8"));
 
-// let dataJson;
-
-// async function loadSwagger() {
-//   try {
-//     const swaggerDocument = JSON.parse(await readFile(swaggerPath, "utf8"));
-//     dataJson = swaggerDocument;
-//   } catch (error) {
-//     console.error("Error reading swagger.json:", error);
-//     process.exit(1); // Завершуємо процес з помилкою
-//   }
-// }
-// loadSwagger();
-console.log(swaggerDocument);
 const options = {
   swaggerDefinition: swaggerDocument,
   apis: [],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
-// await loadSwagger(); // Завантажуємо swaggerSpec перед налаштуванням маршруту
 
 const app = express();
 

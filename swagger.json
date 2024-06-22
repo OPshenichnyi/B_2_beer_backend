@@ -1,982 +1,912 @@
 {
-    "openapi": "3.0.1",
-    "info": {
-        "version": "1.1.1",
-        "title": "Water tracker",
-        "description": "API documentation for project Water tracker.",
-        "license": {
-            "name": "",
-            "url": ""
-        }
-    },
-    "consumes": [
-        "application/json",
-        "multipart/form-data"
-    ],
-    "produces": [
-        "application/json"
-    ],
-    "servers": [
-        {
-            "url": "https://b-2-beer-backend.vercel.app/"
-        }
-    ],
-    "tags": [
-
-        {
-            "name": "User",
-            "description": "User profile  and Authorization endpoints"
-        },
-        {
-            "name": "Water",
-            "description": "Water endpoint for adding, editing and deleting information about water input "
-        },
-        {
-            "name": "DataUser",
-            "description": "Endpoint for getting list of water consume and percentage of daily norma for today "
-        }
-    ],
-    "paths": {
-        "/api/users/register": {
-            "post": {
-                "tags": [
-                    "User"
-                ],
-                "summary": "Sign up new user - User registration",
-                "parameters": [],
-                "requestBody": {
-                    "description": "Signup's object",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AuthRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "New User Registered",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserInfoWithTokenSingupResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "content": {}
-                    },
-                    "409": {
-                        "description": "Email already exist",
-                        "content": {}
-                    }
-                }
-            }
-        },
-        "/api/users/login": {
-            "post": {
-                "tags": [
-                    "User"
-                ],
-                "summary": "Sign in existing user",
-                "parameters": [],
-                "requestBody": {
-                    "description": "Signin's object",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/AuthRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Sign in existing user",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserInfoWithTokenSinginResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "content": {}
-                    },
-                    "401": {
-                        "description": "Email or password is wrong",
-                        "content": {}
-                    }
-                }
-            }
-        },
-        "/api/users/logout": {
-            "post": {
-                "tags": [
-                    "User"
-                ],
-                "summary": "User log out",
-                "parameters": [],
-                "security": [
-                    {
-                       "Bearer": []
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "User log out",
-                        "content": {}
-                    },
-                    "401": {
-                        "description": "Not authorized",
-                        "content": {}
-                    }
-                }
-            }
-        },
-        "/api/users/avatars": {
-            "patch": {
-                "tags": [
-                    "User"
-                ],
-                "summary": "Change user's avatar",
-                "parameters": [],
-                "requestBody": {
-                    "description": "Upload file new user's avatar",
-                    "required": true,
-                    "content": {
-                        "multipart/form-data": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserChangeAvatarRequest"
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Avatar's URL",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserChangeAvatarResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "File not found, File extention not allow",
-                        "content": {}
-                    },
-                    "401": {
-                        "description": "Not authorized",
-                        "content": {}
-                    }
-                }
-            }
-        },
-        "/api/users/current": {
-            "get": {
-                "tags": [
-                    "User"
-                ],
-                "summary": "Get current user info",
-                "parameters": [],
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": " Logged user returned",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserInfoResponse"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Not authorized",
-                        "content": {}
-                    }
-                }
-            }
-        },
-        "/api/users/": {
-            "patch": {
-                "tags": [
-                    "User"
-                ],
-                "summary": "Update user profile",
-                "parameters": [],
-                "requestBody": {
-                    "description": "Update user",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/UserChangeInfoRequest"
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Update user returned",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/UserChangeInfoResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "content": {}
-                    },
-                    "401": {
-                        "description": "Old password is incorrect",
-                        "content": {}
-                    }
-                }
-            }
-        },
-        "/api/users/water-rate/": {
-            "patch": {
-                "tags": [
-                    "User"
-                ],
-                "summary": "Change user's water rate",
-                "parameters": [],
-                "requestBody": {
-                    "description": "New water rate",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/WaterRateRequest"
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "New water rate value",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/WaterRateResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "content": {}
-                    },
-                    "401": {
-                        "description": "Email not found",
-                        "content": {}
-                    }
-                }
-            }
-        },
-        "/api/water/": {
-            "post": {
-                "tags": [
-                    "Water"
-                ],
-                "summary": "Add info about water input",
-                "parameters": [],
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "requestBody": {
-                    "description": "Add new input of water",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/InputRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Input Successfully added",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/InputResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Validation error",
-                        "content": {}
-                    },
-                    "401": {
-                        "description": "Not authorized",
-                        "content": {}
-                    }
-                }
-            }
-        },
-        "/api/water/{waterId}": {
-            "delete": {
-                "tags": [
-                    "Water"
-                ],
-                "summary": "Delete info about water input",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "waterId",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "description": "Dynamic parameter ID of water input records."
-                    }
-                ],
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Delete success",
-                        "content": {}
-                    },
-                    "404": {
-                        "description": "Provided ID is not valid",
-                        "content": {}
-                    },
-                    "401": {
-                        "description": "Not authorized",
-                        "content": {}
-                    }
-                }
-            }
-        },
-        "/api/water/{waterId}/water-volume": {
-            "patch": {
-                "tags": [
-                    "Water"
-                ],
-                "summary": "Update info about water input",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "waterId",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "description": "Dynamic parameter ID of water input records."
-                    }
-                ],
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "requestBody": {
-                    "description": "Update waterVolume",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/InputRequest"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Input Successfully changed",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/InputResponse"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": " ${waterId} is not valid id",
-                        "content": {}
-                    },
-                    "401": {
-                        "description": "Not authorized",
-                        "content": {}
-                    }
-                }
-            }
-        },
-        "/api/today/": {
-            "get": {
-                "tags": [
-                    "DataUser"
-                ],
-                "summary": "Get list of water consume and percentage of daily norma of User for today",
-                "parameters": [],
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "requestBody": {},
-                "responses": {
-                    "200": {
-                        "description": "Successfull operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/GetStatisticsForToday"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "User not found",
-                        "content": {}
-                    }
-                }
-            }
-        },
-        "/api/month/{date} ": {
-            "get": {
-                "tags": [
-                    "DataUser"
-                ],
-                "summary": "Get list of water consume and percentage of daily norma of User for today",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "date",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "pattern": "^\\d{4}-(0[1-9]|1[0-2])$"
-                        },
-                        "description": "Enter the date in the format 2024-01"
-                
-                    }
-                ],
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-
-                "responses": {
-                    "200": {
-                        "description": "Successfull operation",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/GetStatisticsForMonth"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Email not found",
-                        "content": {}
-                    }
-                }
-            }
-        }
-    },
-    "components": {
-        "schemas": {
-            "AuthRequest": {
-                "type": "object",
-                "required": [
-                    "email",
-                    "password"
-                ],
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "description": "User's email",
-                        "format": "email",
-                        "example": "User@gmail.com"
-                    },
-                    "password": {
-                        "type": "string",
-                        "description": "User's password",
-                        "example": "qazWsx12"
-                    }
-                }
-            },
-            "AuthResetPasswordRequest": {
-                "type": "object",
-                "required": [
-                    "email"
-                ],
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "description": "User's email",
-                        "format": "email"
-                    }
-                }
-            },
-            "UserChangeAvatarRequest": {
-                "type": "object",
-                "required": [
-                    "avatarURL"
-                ],
-                "properties": {
-                    "avatarURL": {
-                        "type": "string",
-                        "description": "File of avatarURL",
-                        "format": "binary"
-                    }
-                }
-            },
-            "UserChangeInfoRequest": {
-                "type": "object",
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "description": "User's email",
-                        "example": "User@gmail.com"
-                    },
-                    "userName": {
-                        "type": "string",
-                        "description": "User's name",
-                        "example": "Nik"
-                    },
-                    "gender": {
-                        "type": "string",
-                        "description": "User's gender",
-                        "example": "man",
-                        "enum": [
-                            "man",
-                            "girl"
-                        ]
-                    },
-                    "oldPassword": {
-                        "type": "string",
-                        "description": "Old user's password",
-                        "example": "qazWsx12"
-                    },
-                    "newPassword": {
-                        "type": "string",
-                        "description": "New user's password",
-                        "example": "qazWsx123"
-                    }
-                }
-            },
-            "WaterRateRequest": {
-                "type": "object",
-                "required": [
-                    "waterRate"
-                ],
-                "properties": {
-                    "waterRate": {
-                        "type": "integer",
-                        "description": "User's water rate",
-                        "example": 1900
-                    }
-                }
-            },
-            "UserInfoDefaultResponse": {
-                "type": "object",
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "description": "User's email",
-                        "format": "email",
-                        "example": "User@gmail.com"
-                    },
-                    "userName": {
-                        "type": "string",
-                        "description": "User's name",
-                        "example": ""
-                    },
-                    "avatarURL": {
-                        "type": "string",
-                        "description": "User's avatar",
-                        "example": ""
-                    },
-                    "gender": {
-                        "type": "string",
-                        "description": "User's gender",
-                        "example": "man",
-                        "enum": [
-                            "man",
-                            "girl"
-                        ]
-                    },
-                    "waterRate": {
-                        "type": "integer",
-                        "description": "User's daily water rate",
-                        "example": "2000"
-                    }
-                }
-            },
-            "UserInfoResponse": {
-                "type": "object",
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "description": "User's email",
-                        "example": "User@gmail.com"
-                    },
-                    "userName": {
-                        "type": "string",
-                        "description": "User's name",
-                        "example": "Nik"
-                    },
-                    "avatarURL": {
-                        "type": "string",
-                        "description": "User's avatar",
-                        "example": "https://res.cloudinary.com/djkfbggvo/image/upload/v1703404979/u5icpavsmtvlq64fiyxv.jpg"
-                    },
-                    "gender": {
-                        "type": "string",
-                        "description": "User's gender",
-                        "example": "man",
-                        "enum": [
-                            "man",
-                            "girl"
-                        ]
-                    },
-                    "waterRate": {
-                        "type": "integer",
-                        "description": "User's daily water rate",
-                        "example": "2500"
-                    }
-                }
-            },
-            "UserInfoWithTokenSingupResponse": {
-                "type": "object",
-                "properties": {
-                    "user": {
-                        "$ref": "#/components/schemas/UserInfoDefaultResponse"
-                    }
-                }
-            },
-            "UserInfoWithTokenSinginResponse": {
-                "type": "object",
-                "properties": {
-
-                    "user": {
-                        "$ref": "#/components/schemas/UserInfoResponse"
-                        
-                    },
-                    "token": {
-                        "type": "string",
-                        "description": "Bearer token",
-                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ODY5YzQ3YmRkMTVhMTg0ZTU0NjQxZSIsImlhdCI6MTcwMzMyMDY0OSwiZXhwIjoxNzAzNDA3MDQ5fQ.oJnhuBn0QoriX-ZUNJSHBdNHTvsQso7IQyAnAzjaV04"
-                    }
-                }
-            },
-            "AuthResetPasswordResponse": {
-                "type": "object",
-                "properties": {
-                    "message": {
-                        "type": "string",
-                        "description": "Success message",
-                        "example": "A new password has been sent to your email"
-                    }
-                }
-            },
-            "UserChangeAvatarResponse": {
-                "type": "object",
-                "properties": {
-                    "avatarURL": {
-                        "type": "string",
-                        "description": "Avatar's URL",
-                        "example": "https://res.cloudinary.com/djkfbggvo/image/upload/v1703404979/u5icpavsmtvlq64fiyxv.jpg"
-                    }
-                }
-            },
-            "UserChangeInfoResponse": {
-                "type": "object",
-                "properties": {
-                    "email": {
-                        "type": "string",
-                        "description": "User's email",
-                        "example": "User@gmail.com"
-                    },
-                    "userName": {
-                        "type": "string",
-                        "description": "User's name",
-                        "example": "Nik"
-                    },
-                    "gender": {
-                        "type": "string",
-                        "description": "User's gender",
-                        "example": "man",
-                        "enum": [
-                            "man",
-                            "girl"
-                        ]
-                    },
-                    "createdAt": {
-                        "type": "string",
-                        "description": "created at",
-                        "example": "2024-01-09T14:21:47.211Z"
-                    },
-                    "updatedAt": {
-                        "type": "string",
-                        "description": "created at",
-                        "example": "2024-01-09T17:37:21.124Z"
-                    }
-                }
-            },
-            "WaterRateResponse": {
-                "type": "object",
-                "properties": {
-                    "waterRate": {
-                        "type": "integer",
-                        "description": "User's water rate",
-                        "example": 1900
-
-                    }
-                }
-            },
-            "GetTotalDataByCurrentDayResponse": {
-                "type": "object",
-                "properties": {
-                    "waterInputsForToday": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "_id": {
-                                    "type": "string",
-                                    "description": "ID of water input records"
-                                },
-                                "waterVolume": {
-                                    "type": "integer",
-                                    "description": "The portion of water consumed in a single entry."
-                                },
-                                "date": {
-                                    "type": "string",
-                                    "description": "Time of water input"
-                                },
-                                "owner": {
-                                    "type": "string",
-                                    "description": "User's id"
-                                }
-                            }
-                        }
-                    },
-                    "dailyNormFulfillment": {
-                        "type": "integer",
-                        "description": "Total daily water consumption fulfillment."
-                    }
-                },
-                "example": {
-                    "waterInputsForToday": [
-                        {
-                            "_id": "6550bd6da31c7d1b6d55241a",
-                            "waterVolume": 1,
-                            "date": "2023-11-12T10:03:24.626Z",
-                            "owner": "654f6747c4faaae3bc1857f1"
-                        },
-                        {
-                            "_id": "6550bd80a31c7d1b6d55241d",
-                            "waterVolume": 2,
-                            "date": "2023-11-12T13:05:24.626Z",
-                            "owner": "654f6747c4faaae3bc1857f1"
-                        }
-                    ],
-                    "dailyNormFulfillment": 50
-                }
-            },
-            "InputRequest": {
-                "type": "object",
-                "required": [
-                    "waterVolume",
-                    "date"
-                ],
-                "properties": {
-                    "waterVolume": {
-                        "type": "integer",
-                        "description": "quantity of drunk water"
-                    },
-                    "date": {
-                        "type": "string",
-                        "description": "time of water input"
-                    }
-                },
-                "example": {
-                    "waterVolume": 200,
-                    "date": "2023-11-14T17:06:57.705Z"
-                }
-            },
-
-            "InputResponse": {
-                "type": "object",
-                "properties": {
-                    "_id": {
-                        "type": "string",
-                        "description": "ID of water input records"
-                    },
-                    "waterVolume": {
-                        "type": "integer",
-                        "description": "The portion of water consumed in a single entry."
-                    },
-                    "date": {
-                        "type": "string",
-                        "description": "time of water input"
-                    },
-                    "owner": {
-                        "type": "string",
-                        "description": "User'd ID"
-                    }
-
-                },
-                "example": {
-
-                    "_id": "65886da5d4ab9261e648e775",  
-                    "waterVolume": 300,                  
-                    "date": "2023-12-23T17:33:57.705Z",
-                    "owner": "658863b96dececba531c5fb1"
-
-                }
-            },
-            "GetStatisticsForToday": {
-                "type": "object",
-                "properties": {                    
-                "percentage": {
-                    "type": "integer",
-                    "description": "Percentage of daily water rate fulfillment."
-                },
-                "dailyTotal": {
-                    "type": "integer",
-                    "description": "Drank water per day."
-                },
-                "waterRate": {
-                    "type": "integer",
-                    "description": "Required amount of water per day."
-                },
-                    "waterRecords": {
-                        "type": "array",
-                        "description": "All inputs of the water per current day",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "waterVolume": {
-                                    "type": "integer",
-                                    "description": "The portion of water consumed in a single entry."
-                                },
-                                "date": {
-                                    "type": "string",
-                                    "description": "Time of water input."
-                                },
-                                "owner": {
-                                    "type": "string",
-                                    "description": "User's ID."
-                                },
-                                "_id": {
-                                    "type": "string",
-                                    "description": "ID of water input records."
-                                }
-                            }
-                        }
-                    }
-
-                },
-                "example": {
-                    "percentage": 60,
-                    "dailyTotal":1200,
-                    "waterRate":2000,
-                    "waterRecords": [
-                        {
-                            "_id": "65880146dda4349579270cef",
-                            "waterVolume": 200,
-                            "date": "2023-12-24T11:33:57.705Z",
-                            "owner": "6587e58dcb3dfb3a121e30f4",
-                            "createdAt":"2023-12-24T10:00:38.880Z",
-                            "updatedAt":"2023-12-24T10:00:38.880Z"
-                        }
-                    ]
-                    
-                }
-            },
-            "GetStatisticsForMonth": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "date": {
-                            "type": "string",
-                            "description": "Time and month of water input"
-                        },
-                        "waterRate": {
-                            "type": "integer",
-                            "description": "User's water rate"
-                        },
-                        "dailyNormFulfillment": {
-                            "type": "integer",
-                            "description": "Percentage of daily water rate fulfillment."
-                        },
-                        "servingOfWater": {
-                            "type": "integer",
-                            "description": "Quantity of inputs per day"
-                        }
-                    }
-                },
-                "example": [
-                    {
-                        "date": "2023-12-23",
-                        "dailyNormFulfillment": 30,
-                        "WaterRate": 2,
-                        "servingOfWater": 1
-                    },
-                    {
-                        "date": "2023-12-24",
-                        "dailyNormFulfillment": 90,
-                        "WaterRate": 2,
-                        "servingOfWater": 3
-                    }
-                ]
-            }
-        },
-        "securitySchemes": {
-            "Bearer": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
-            }
-        }
+  "openapi": "3.0.0",
+  "info": {
+    "title": "home-iot-api",
+    "description": "The API for the EatBacon IOT project",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://virtserver.swaggerhub.com/ALEXANDERPSHENICHNYI/Test/1.0.0",
+      "description": "SwaggerHub API Auto Mocking"
     }
+  ],
+  "paths": {
+    "/devices": {
+      "get": {
+        "tags": [
+          "Device"
+        ],
+        "description": "returns all registered devices",
+        "operationId": "getDevices",
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "description": "number of records to skip",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "max number of records to return",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All the devices",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "uri",
+                    "example": "http://10.0.0.225:8080"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Device"
+        ],
+        "operationId": "register",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeviceRegistrationInfo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successfully registered device"
+          }
+        }
+      }
+    },
+    "/lighting/dimmers/{deviceId}/{value}": {
+      "post": {
+        "tags": [
+          "Z-Wave"
+        ],
+        "operationId": "setDimmer",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "value",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-swagger-router-controller": "ZWave"
+      }
+    },
+    "/lighting/dimmers/{deviceId}/{value}/timer/{timeunit}": {
+      "post": {
+        "tags": [
+          "Z-Wave"
+        ],
+        "description": "sets a dimmer to a specific value on a timer",
+        "operationId": "setDimmerTimer",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "value",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "timeunit",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "units",
+            "in": "query",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "default": "milliseconds",
+              "enum": [
+                "seconds",
+                "minutes",
+                "milliseconds"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-swagger-router-controller": "ZWave"
+      }
+    },
+    "/lighting/switches/{deviceId}": {
+      "get": {
+        "tags": [
+          "Z-Wave"
+        ],
+        "operationId": "getSwitchState",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceState"
+                }
+              }
+            }
+          }
+        },
+        "x-swagger-router-controller": "ZWave"
+      }
+    },
+    "/lighting/switches/{deviceId}/{value}": {
+      "post": {
+        "tags": [
+          "Z-Wave"
+        ],
+        "operationId": "setSwitch",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "value",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-swagger-router-controller": "ZWave"
+      }
+    },
+    "/lighting/switches/{deviceId}/{value}/timer/{minutes}": {
+      "post": {
+        "tags": [
+          "Z-Wave"
+        ],
+        "description": "sets a switch to a specific value on a timer",
+        "operationId": "setSwitchTimer",
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "value",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          },
+          {
+            "name": "minutes",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-swagger-router-controller": "ZWave"
+      }
+    },
+    "/lightingSummary": {
+      "get": {
+        "tags": [
+          "Z-Wave"
+        ],
+        "operationId": "getLightingSummary",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LightingSummary"
+                }
+              }
+            }
+          }
+        },
+        "x-swagger-router-controller": "ZWave"
+      }
+    },
+    "/temperature": {
+      "get": {
+        "tags": [
+          "Environment"
+        ],
+        "operationId": "temperatureSummary",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemperatureSummary"
+                }
+              }
+            }
+          }
+        },
+        "x-swagger-router-controller": "Environment"
+      }
+    },
+    "/temperature/forecast/{days}": {
+      "get": {
+        "tags": [
+          "Environment"
+        ],
+        "operationId": "getForecast",
+        "parameters": [
+          {
+            "name": "days",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "the forecast",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-swagger-router-controller": "Environment"
+      }
+    },
+    "/temperature/{zoneId}": {
+      "get": {
+        "tags": [
+          "Environment"
+        ],
+        "operationId": "getZoneTemperature",
+        "parameters": [
+          {
+            "name": "zoneId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Zone temperature",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemperatueZoneStatus"
+                }
+              }
+            }
+          }
+        },
+        "x-swagger-router-controller": "Environment"
+      }
+    },
+    "/temperature/{zoneId}/heater": {
+      "get": {
+        "tags": [
+          "Environment"
+        ],
+        "description": "gets the state of the heater",
+        "operationId": "getHeaterState",
+        "parameters": [
+          {
+            "name": "zoneId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "heater state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HeaterState"
+                }
+              }
+            }
+          }
+        },
+        "x-swagger-router-controller": "Environment"
+      }
+    },
+    "/temperature/{zoneId}/heater/{state}": {
+      "post": {
+        "tags": [
+          "Environment"
+        ],
+        "description": "turns the heater on or off",
+        "operationId": "setHeaterState",
+        "parameters": [
+          {
+            "name": "zoneId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "false",
+                "true"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status of the operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-swagger-router-controller": "Environment"
+      }
+    },
+    "/zones": {
+      "get": {
+        "tags": [
+          "Zones"
+        ],
+        "operationId": "getZones",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-swagger-router-controller": "Zones"
+      }
+    },
+    "/zones/{zoneId}/quiet": {
+      "get": {
+        "tags": [
+          "Zones"
+        ],
+        "operationId": "quietZone",
+        "parameters": [
+          {
+            "name": "zoneId",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "basement",
+                "first-floor",
+                "second-floor"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok"
+          }
+        },
+        "x-swagger-router-controller": "Zones"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LightingSummary": {
+        "type": "object",
+        "properties": {
+          "zones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LightingZone"
+            }
+          },
+          "zoneStatus": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LightingZoneStatus"
+            }
+          }
+        },
+        "description": "ok"
+      },
+      "LightingZone": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "deviceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "deviceType": {
+            "type": "string",
+            "enum": [
+              "dimmer",
+              "switch"
+            ]
+          },
+          "zone": {
+            "type": "string"
+          }
+        }
+      },
+      "LightingZoneStatus": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "lastUpdate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "description": "the status of the lighting zone."
+      },
+      "TemperatureSummary": {
+        "type": "object",
+        "properties": {
+          "zones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TemperatureZone"
+            }
+          },
+          "zoneStatus": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TemperatueZoneStatus"
+            }
+          }
+        },
+        "description": "ok"
+      },
+      "TemperatureZone": {
+        "required": [
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "the unique identifier for the zone",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "inputPosition": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "outputPosition": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "zone": {
+            "type": "string"
+          }
+        },
+        "description": "a single temperature zone"
+      },
+      "TemperatueZoneStatus": {
+        "required": [
+          "id",
+          "timestamp",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "the unique identifier for the zone"
+          },
+          "name": {
+            "type": "string",
+            "description": "the name of the zone"
+          },
+          "value": {
+            "type": "number",
+            "description": "the temperature in the zone",
+            "format": "double"
+          },
+          "units": {
+            "type": "string",
+            "description": "the temperature units",
+            "default": "fahrenheit",
+            "enum": [
+              "celsius",
+              "fahrenheit"
+            ]
+          },
+          "timestamp": {
+            "type": "string",
+            "description": "the timestamp when the temperature was measured",
+            "format": "date-time"
+          }
+        },
+        "description": "status of a single zone"
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string",
+            "example": "everything is ok"
+          }
+        }
+      },
+      "HeaterState": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          }
+        }
+      },
+      "DeviceState": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "lastUpdate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ForecastResponse": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "$ref": "#/components/schemas/City"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Forecast"
+            }
+          }
+        }
+      },
+      "Forecast": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pressure": {
+            "type": "number",
+            "format": "double"
+          },
+          "humidity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "windSpeed": {
+            "type": "number",
+            "format": "double"
+          },
+          "clouds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "temperature": {
+            "$ref": "#/components/schemas/ForecastTemperature"
+          },
+          "weather": {
+            "$ref": "#/components/schemas/WeatherForecast"
+          }
+        }
+      },
+      "City": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "lat": {
+            "type": "number",
+            "format": "double"
+          },
+          "lon": {
+            "type": "number",
+            "format": "double"
+          },
+          "country": {
+            "type": "string"
+          }
+        }
+      },
+      "ForecastTemperature": {
+        "type": "object",
+        "properties": {
+          "low": {
+            "type": "number",
+            "format": "double"
+          },
+          "high": {
+            "type": "number",
+            "format": "double"
+          },
+          "morning": {
+            "type": "number",
+            "format": "double"
+          },
+          "day": {
+            "type": "number",
+            "format": "double"
+          },
+          "evening": {
+            "type": "number",
+            "format": "double"
+          },
+          "night": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "WeatherForecast": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          }
+        }
+      },
+      "DeviceRegistrationInfo": {
+        "type": "object",
+        "properties": {
+          "uri": {
+            "type": "string",
+            "format": "uri",
+            "example": "http://10.0.0.220:8080"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "example": "0729a580-2240-11e6-9eb5-0002a5d5c51b"
+          }
+        }
+      }
+    }
+  }
 }
