@@ -10,6 +10,10 @@
     {
       "src": "/(.*)",
       "dest": "/server.js"
+    },
+        {
+      "src": "/docs(.*)",
+      "dest": "/node_modules"
     }
   ]
 }
