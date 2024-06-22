@@ -12,10 +12,10 @@ import swaggerJSDoc from "swagger-jsdoc";
 import authRouter from "./routes/auth-routers.js";
 
 // Swagger
-const swaggerDocument = JSON.parse(await readFile("./swagger.json"));
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
-// const swaggerPath = path.join(__dirname, "swagger.json");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const swaggerPath = path.join(__dirname, "swagger.json");
+const swaggerDocument = JSON.parse(await readFile(swaggerPath, "utf8"));
 
 // let dataJson;
 
