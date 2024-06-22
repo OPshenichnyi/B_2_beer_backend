@@ -6,6 +6,7 @@ import { readFile } from "fs/promises";
 import { fileURLToPath } from "url";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
+import SwaggerDist from "swagger-ui-dist";
 import swaggerJSDoc from "swagger-jsdoc";
 import { SwaggerUIBundle, SwaggerUIStandalonePreset } from "swagger-ui-dist";
 
@@ -32,7 +33,7 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use(express.static("public"));
+app.use(express.static(SwaggerDist.absolutePath()));
 app.use("/api/users", authRouter);
 
 app.use((req, res) => {
