@@ -14,6 +14,7 @@ const CSS_URL =
 
 const options = {
   customCssUrl: CSS_URL,
+  apis: [],
 };
 // Swagger
 const __filename = fileURLToPath(import.meta.url);
