@@ -19,12 +19,10 @@ const swaggerPath = path.join(__dirname, "swagger.json");
 const swaggerDocument = JSON.parse(await readFile(swaggerPath, "utf8"));
 
 const options = {
-  // swaggerDefinition: swaggerDocument,
   apis: [],
-  explorer: true,
+  customCssUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui.css",
 };
-
-// const swaggerSpec = swaggerJSDoc(options);
 
 const app = express();
 
