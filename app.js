@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import path from "path";
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
+import { SwaggerUIBundle, SwaggerUIStandalonePreset } from "swagger-ui-dist";
 
 //Path
 import authRouter from "./routes/auth-routers.js";
