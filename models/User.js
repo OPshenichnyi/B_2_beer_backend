@@ -8,7 +8,7 @@ import { handleSaveError, preUpdate } from "./hooks.js";
 // manager - create orders customer,
 // logist - delivery product
 
-const statusUser = ["provider", "customer", "manager", "logist"];
+const clientType = ["seller", "buyer"];
 
 const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -17,7 +17,6 @@ const userSchema = new Schema(
   {
     userName: {
       type: String,
-      required: [true, "Name is required"],
     },
     email: {
       type: String,
@@ -31,7 +30,7 @@ const userSchema = new Schema(
     },
     subscription: {
       type: String,
-      enum: statusUser,
+      enum: clientType,
       require: [true, "Select type user"],
     },
     verify: {
@@ -60,13 +59,13 @@ export default User;
 //+ User schema Joi
 
 export const userSignupSchema = Joi.object({
-  userName: Joi.string().required(),
+  userName: Joi.string(),
   email: Joi.string().pattern(emailRegexp).required().messages({
     "any.required": "missing required email field",
   }),
   password: Joi.string().min(6).required(),
-  subscription: Joi.string()
-    .valid(...statusUser)
+  clientType: Joi.string()
+    .valid(...clientType)
     .required()
     .messages({ "any.required": "Please select type user" }),
 });

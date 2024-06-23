@@ -7,6 +7,7 @@ import { nanoid } from "nanoid";
 
 const { JWT_SECRET, BASE_URL } = process.env;
 
+// This is a function for singup in user
 const signup = async (req, res) => {
   const { email, password } = req.body;
 
@@ -29,10 +30,15 @@ const signup = async (req, res) => {
   };
   await sendEmail(verifyEmail);
   res.status(201).json({
-    email: newUser.email,
+    status: "success",
+    message: "Verification your email",
+    data: {
+      email: newUser.email,
+    },
   });
 };
 
+// This is a function for sign in user
 const signin = async (req, res, next) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });

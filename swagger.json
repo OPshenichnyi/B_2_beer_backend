@@ -12,6 +12,9 @@
   "paths": {
     "/register": {
       "post": {
+        "tags": [
+          "User Authentication Module"
+        ],
         "summary": "Register a new users.",
         "requestBody": {
           "required": true,
@@ -27,7 +30,10 @@
                     "type": "string"
                   },
                   "clientType": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                      "seller, buyer"
+                    ]
                   }
                 }
               }
@@ -36,7 +42,65 @@
         },
         "responses": {
           "201": {
-            "description": "Created"
+            "description": "Register success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Please verify your email address"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string",
+                          "example": "test@ukr.net"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "missing required email field"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict email address",
+            "content": {
+              "aplication/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Email already exist"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
