@@ -2,14 +2,10 @@ import { Schema, model } from "mongoose";
 import Joi from "joi";
 import { handleSaveError, preUpdate } from "./hooks.js";
 
-// Have four type users hi have other rules acces:
-// provider - owner product,
-// customer - sale product owner,
-// manager - create orders customer,
-// logist - delivery product
+// Root client type
+const rootClient = ["seller", "buyer"];
 
-const clientType = ["seller", "buyer"];
-
+// email regular expression
 const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 //+ User schema moongose
@@ -28,9 +24,9 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Password is required"],
     },
-    subscription: {
+    clientType: {
       type: String,
-      enum: clientType,
+      enum: rootClient,
       require: [true, "Select type user"],
     },
     verify: {
@@ -64,10 +60,10 @@ export const userSignupSchema = Joi.object({
     "any.required": "missing required email field",
   }),
   password: Joi.string().min(6).required(),
-  clientType: Joi.string()
-    .valid(...clientType)
-    .required()
-    .messages({ "any.required": "Please select type user" }),
+  clientType: Joi.string().required().messages({
+    "any.required": "Please select type user",
+  }),
+  language: Joi.string(),
 });
 
 export const userSigninSchema = Joi.object({

@@ -2,11 +2,11 @@
   "openapi": "3.0.0",
   "info": {
     "title": "B_2_Beer web aplication",
-    "description": "The API for the B-2-Beer backend",
-    "version": "1.0.0"
+    "description": "This API is designed for a B2B platform that facilitates the sale of beer between businesses.                                                                       The platform enables sellers (breweries, distributors) to list their beer products and allows buyers (retailers, bars, restaurants) to purchase beer in bulk.",
+    "version": "0.0.1"
   },
   "-servers": {
-    "-url": "https://b-2-beer-backend.vercel.app/",
+    "-url": "https://b-2-beer-backend.vercel.app/api/",
     "description": "Dev server"
   },
   "paths": {
@@ -32,10 +32,25 @@
                   "clientType": {
                     "type": "string",
                     "enum": [
-                      "seller, buyer"
+                      "seller",
+                      "buyer"
+                    ],
+                    "example": [
+                      "seller"
+                    ]
+                  },
+                  "language": {
+                    "type": "string",
+                    "enum": [
+                      "ua"
                     ]
                   }
-                }
+                },
+                "required": [
+                  "email",
+                  "password",
+                  "clientType"
+                ]
               }
             }
           }
@@ -74,12 +89,39 @@
             "description": "Bad request",
             "content": {
               "application/json": {
+                "examples": {
+                  "missingEmail": {
+                    "summary": "Required email",
+                    "value": {
+                      "message": "Email is requred"
+                    }
+                  },
+                  "missingPassword": {
+                    "summary": "Required password",
+                    "value": {
+                      "message": "Required field password"
+                    }
+                  },
+                  "missingClientType": {
+                    "summary": "Required Client Type",
+                    "value": {
+                      "message": "Required field Client Type"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bad registration type client",
+            "content": {
+              "aplication/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "missing required email field"
+                      "example": "Registration with the specified client type is not allowed"
                     }
                   }
                 }

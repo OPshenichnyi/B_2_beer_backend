@@ -4,30 +4,54 @@ import User from "../models/User.js";
 import { HttpError, sendEmail } from "../helpers/index.js";
 import { ctrlWrapper } from "../decorators/index.js";
 import { nanoid } from "nanoid";
+import { verificationEmailTemplate } from "../email_templates/emailVerifycation.js";
 
 const { JWT_SECRET, BASE_URL } = process.env;
 
 // This is a function for singup in user
 const signup = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, language, clientType } = req.body;
 
+  // Check if user exist
   const user = await User.findOne({ email });
   if (user) {
     throw HttpError(409, "Email already exist");
   }
+  console.log(typeof clientType);
+  if (clientType !== "seller" && clientType !== "buyer") {
+    throw HttpError(
+      403,
+      "Registration with the specified client type is not allowed"
+    );
+  }
+  // Hash password
   const hashPassword = await bcrypt.hash(password, 10);
+
+  // Create verification token
   const verificationToken = nanoid();
 
+  // Create new user
   const newUser = await User.create({
     ...req.body,
     password: hashPassword,
     verificationToken,
   });
+
+  // Select language
+  const selectLanguage = language === "en" ? "en" : "ua";
+
+  // Seting up email
   const verifyEmail = {
     to: email,
-    subject: "Verifycation your email in Aplication RETURN BOX",
-    html: `<div><a target ="_blank" Href= "${BASE_URL}/users/verify/${verificationToken}">Verification your Email</a></div>`,
+    subject: "Verifycation your email in B2BEER",
+    html: verificationEmailTemplate(
+      `${email}`,
+      `${BASE_URL}/api/users/verify/${verificationToken}`,
+      `${selectLanguage}`
+    ),
   };
+
+  // Send email
   await sendEmail(verifyEmail);
   res.status(201).json({
     status: "success",
@@ -38,7 +62,7 @@ const signup = async (req, res) => {
   });
 };
 
-// This is a function for sign in user
+// This is a function for singin in user
 const signin = async (req, res, next) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
